@@ -1,0 +1,55 @@
+{
+    "valueset_search": {
+        "get": {
+            "_comment": "Поиск по справочникам",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "valueset_id": {"type": "string"},
+                    "fts": {"type": "string"}
+                },
+                "required": ["valueset_id", "fts"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "code": {"type": "string"},
+                        "text": {"type": "string"}
+                    },
+                    "required": ["code", "text"],
+                    "additionalProperties": false
+                },
+                "minItems": 0
+            }
+        }
+    },
+    "valueset_get": {
+        "get": {
+            "_comment": "Получение всех элементов справочника",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "code": {"type": "string"},
+                        "text": {"type": "string"}
+                    },
+                    "required": ["code", "text"],
+                    "additionalProperties": false
+                },
+                "minItems": 0
+            }
+        }
+    }
+}

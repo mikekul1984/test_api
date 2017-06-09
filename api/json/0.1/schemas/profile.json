@@ -1,0 +1,31 @@
+{
+    "common": {
+        "get": {
+            "_comment": "Получение профиля пользователя для сайта",
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string"},
+                    "current_role": {"enum": ["patient", "practitioner", "organization"]},
+                    "lastname": {"type": ["string", "null"]},
+                    "firstname": {"type": ["string", "null"]},
+                    "middlename": {"type": ["string", "null"]},
+                    "birthdate": {"type": ["string", "null"], "format": "date"},
+                    "gender": {"enum": ["male", "female", null]},
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "enum": ["patient", "practitioner", "organization"]
+                        },
+                        "minItems": 1
+                    }
+                },
+                "required": ["username", "current_role", "roles"],
+                "additionalProperties": false
+            }
+        }
+    }
+}

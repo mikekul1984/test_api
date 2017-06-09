@@ -1,0 +1,20 @@
+{
+    "feedback": {
+        "_comment": "Обратная связь",
+        "post": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "contact_data": {"type": "string"},
+                    "message": {"type": "string"}
+                },
+                "required": ["name", "contact_data", "message"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    }
+}

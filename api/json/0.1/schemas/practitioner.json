@@ -1,0 +1,1832 @@
+{
+    "profile": {
+        "_comment": "Профиль врача",
+        "get": {
+            "_comment": "Получение общих данных профиля врача",
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string"},
+                    "balance": {"type": "number"},
+                    "roles": {
+                        "_comment": "Роли пользователя",
+                        "type": "array",
+                        "items": {
+                            "role": {"enum": ["patient", "practitioner"]}
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "gender": {"enum": ["male", "female", null]},
+                    "birthdate": {"type": ["string", "null"], "format": "date"},
+                    "documents": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": {"type": "string"}
+                            },
+                            "required": ["url"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0
+                    },
+                    "photo": {
+                        "type": ["object", "null"],
+                        "properties": {
+                            "url": {"type": "string"}
+                        },
+                        "required": ["url"],
+                        "additionalProperties": false
+                    },
+                    "city": {"type": ["string", "null"]},
+                    "workplace": {"type": ["string", "null"]},
+                    "firstname": {"type": ["string", "null"]},
+                    "lastname": {"type": ["string", "null"]},
+                    "middlename": {"type": ["string", "null"]},
+                    "phone": {"type": ["string", "null"]},
+                    "email": {"type": ["string", "null"], "format": "email"},
+                    "specialty": {
+                        "_comment": "Специализации",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "code": {"type": "string"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["code", "text"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0
+                    },
+                    "organizations": {
+                        "_comment": "Организации",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "_comment": "Идентификатор организации",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "_comment": "Название",
+                                    "type": ["string", "null"]
+                                }
+                            },
+                            "required": ["id"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0
+                    },
+                    "appointment": {
+                        "_comment": "Должность",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "code": {"type": "string"},
+                            "text": {"type": "string"}
+                        },
+                        "required": ["code", "text"],
+                        "additionalProperties": false
+                    },
+                    "degree": {
+                        "_comment": "Ученая степень",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "code": {"type": "string"},
+                            "text": {"type": "string"}
+                        },
+                        "required": ["code", "text"],
+                        "additionalProperties": false
+                    },
+                    "searchable": {"_comment": "Показывать в результатах поиска", "type": "boolean"},
+                    "online": {"_comment": "Консультирую онлайн", "type": "boolean"},
+                    "experience": {"_comment": "Стаж", "type": ["number", "null"]},
+                    "education": {"_comment": "Образование (Narrative)", "type": ["string", "null"]},
+                    "operational_experience": {"_comment": "Опыт работы (Narrative)", "type": ["string", "null"]},
+                    "comment": {"_comment": "Дополнительная информация (Narrative)", "type": ["string", "null"]}
+                },
+                "required": ["username", "balance", "roles", "documents"],
+                "additionalProperties": false
+            }
+        },
+        "put": {
+            "_comment": "Сохранение общих данных профиля врача",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "photo": {
+                        "type": ["object", "null"],
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "mime": {"type": "string"},
+                                    "filename": {"type": "string"},
+                                    "b64data": {"type": "string"}
+                                },
+                                "required": ["mime", "filename", "b64data"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "url": {"type": "string"}
+                                },
+                                "required": ["url"],
+                                "additionalProperties": false
+                            },
+                            {"type": "null"}
+                        ]
+                    },
+                    "searchable": {"_comment": "Показывать в результатах поиска", "type": "boolean"},
+                    "online": {"_comment": "Консультация онлайн", "type": "boolean"},
+                    "gender": {"enum": ["male", "female", null]},
+                    "birthdate": {"type": ["string", "null"], "format": "date"},
+                    "firstname": {"type": ["string", "null"]},
+                    "lastname": {"type": ["string", "null"]},
+                    "middlename": {"type": ["string", "null"]},
+                    "phone": {"type": ["string", "null"]},
+                    "email": {"type": ["string", "null"], "format": "email"},
+                    "city": {"_comment": "Регион работы", "type": ["string", "null"]},
+                    "workplace": {"_comment": "Место работы", "type": ["string", "null"]},
+                    "documents": {
+                        "_comment": "Документы об образовании",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "mime": {"type": "string"},
+                                        "filename": {"type": "string"},
+                                        "b64data": {"type": "string"}
+                                    },
+                                    "required": ["mime", "filename", "b64data"],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "properties": {
+                                        "url": {"type": "string"}
+                                    },
+                                    "required": ["url"],
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "specialty": {
+                        "_comment": "Специализации",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "code": {"type": "string"},
+                                "text": {"type": "string"}
+                            },
+                            "required": ["code", "text"],
+                            "additionalProperties": false
+                        }
+                    },
+                    "appointment": {
+                        "_comment": "Должность",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "code": {"type": "string"},
+                            "text": {"type": "string"}
+                        },
+                        "required": ["code", "text"],
+                        "additionalProperties": false
+                    },
+                    "degree": {
+                        "_comment": "Ученая степень",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "code": {"type": "string"},
+                            "text": {"type": "string"}
+                        },
+                        "required": ["code", "text"],
+                        "additionalProperties": false
+                    },
+                    "experience": {
+                        "_comment": "Стаж (года)",
+                        "type": ["number", "null"]
+                    },
+                    "education": {"_comment": "Образование (Narrative)", "type": ["string", "null"]},
+                    "operational_experience": {"_comment": "Опыт работы (Narrative)", "type": ["string", "null"]},
+                    "comment": {"_comment": "Дополнительная информация (Narrative)", "type": ["string", "null"]}
+                },
+                "required": ["documents"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "profile_services": {
+        "_comment": "Мои услуги",
+        "get": {
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "number"},
+                        "name": {"type": "string"},
+                        "activity": {"type": "boolean"},
+                        "price": {"type": "number"}
+                    },
+                    "required": ["id"],
+                    "additionalProperties": false
+                }
+            }
+        },
+        "put": {
+            "in": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "_comment": "Идентификатор услуги",
+                            "type": "number"
+                        },
+                        "activity": {"type": "boolean"},
+                        "price": {"type": "number"}
+                    },
+                    "required": ["id", "activity", "price"],
+                    "additionalProperties": false
+                }
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "patient_search": {
+        "_comment": "Поиск пациентов",
+        "get": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "page": {"type": ["number", "null"]},
+                    "perpage": {"type": ["number", "null"]},
+                    "fts": {"type": ["string", "integer", "null"]}
+                },
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "total": {"type": "number", "default": 0},
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string"},
+                                "photo": {
+                                    "type": ["object", "null"],
+                                    "properties": {
+                                        "url": {"type": "string"}
+                                    },
+                                    "required": ["url"],
+                                    "additionalProperties": false
+                                },
+                                "firstname": {"type": ["string", "null"]},
+                                "middlename": {"type": ["string", "null"]},
+                                "lastname": {"type": ["string", "null"]},
+                                "gender": {"enum": ["male", "female", null]},
+                                "birthdate": {"type": ["string", "null"], "format": "date"},
+                                "messages": {"type": "number"}
+                            },
+                            "required": ["id"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "patient": {
+        "_comment": "Работа с 'Мои пациенты'",
+        "get": {
+            "_comment": "Получение списка моих пациентов",
+            "in": {
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "string"},
+                        "username": {"type": "string"},
+                        "uid": {"type": "string"},
+                        "firstname": {"type": ["string", "null"]},
+                        "middlename": {"type": ["string", "null"]},
+                        "lastname": {"type": ["string", "null"]},
+                        "photo": {
+                            "type": ["object", "null"],
+                            "properties": {
+                                "url": {"type": ["string", "null"]}
+                            },
+                            "required": ["url"],
+                            "additionalProperties": false
+                        },
+                        "gender": {"type": ["string", "null"], "enum": ["male", "female", null]},
+                        "birthdate": {"type": ["string", "null"], "format": "date"},
+                        "online": {"type": "boolean"},
+                        "messages": {"type": "number"},
+                        "relationship": {
+                            "_comment": "my в случае если статус не определен",
+                            "enum": ["requested", "accepted", "rejected", "my"]
+                        },
+                        "services": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "_comment": "Идентификатор услуги (UUID)",
+                                        "type": "string"
+                                    },
+                                    "requests": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {"_comment": "UUID (ServiceRequest.id)", "type": "string"},
+                                                "created_at": {"type": "string", "format": "date-time"},
+                                                "updated_at": {"type": "string", "format": "date-time"},
+                                                "status": {"enum": ["requested", "started", "completed", "finished", "conflicted", "cancelled", null]}
+                                            },
+                                            "required": ["id", "status"],
+                                            "additionalProperties": false
+                                        }
+                                    }
+                                },
+                                "required": ["id"],
+                                "additionalProperties": false
+                            },
+                            "minItems": 0
+                        }
+                    },
+                    "required": ["id", "username", "relationship"],
+                    "additionalProperties": false
+                },
+                "minItems": 0
+            }
+        },
+        "post": {
+            "_comment": "Добавить пациента в мои",
+            "in": {
+                "_comment": "Идентификатор пациента",
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+            }
+        },
+        "delete": {
+            "_comment": "Удаление пациента из моих",
+            "in": {
+                "_comment": "Идентификатор пациента",
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+            }
+        }
+    },
+    "patient_profile": {
+        "_comment": "Профиль пациента",
+        "get": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "username": {"type": "string"},
+                    "firstname": {"type": ["string", "null"]},
+                    "middlename": {"type": ["string", "null"]},
+                    "lastname": {"type": ["string", "null"]},
+                    "gender": {"enum": ["male", "female", null]},
+                    "birthdate": {"type": ["string", "null"], "format": "date"},
+                    "photo": {
+                        "type": ["object", "null"],
+                        "properties": {
+                            "url": {"type": "string"}
+                        },
+                        "required": ["url"],
+                        "additionalProperties": false
+                    },
+                    "relationship": {
+                        "_comment": "my в случае если статус не определен",
+                        "enum": ["requested", "accepted", "rejected", "my", null]
+                    },
+                    "messages": {"type": "number", "default": "0"}
+                },
+                "required": ["id", "username", "relationship"],
+                "additionalProperties": false
+            }
+        }
+    },
+    "patient_relationship": {
+        "_comment": "Работа со статусом отношений с пациентом из 'мои пациенты'",
+        "put": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "patient": {
+                        "_comment": "Идентификатор пациента (UUID)",
+                        "type": "string"
+                    },
+                    "relationship": {
+                        "enum": ["accepted", "rejected", "my"]
+                    }
+                },
+                "required": ["patient", "relationship"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "relationship": ["my", "requested", "accepted", "rejected"]
+                },
+                "required": ["relationship"],
+                "additionalProperties": false
+            }
+        }
+    },
+    "account": {
+        "_comment": "Работа с счетом пользователя",
+        "get": {
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "balance": {"type": "number"},
+                "reserved": {"type": "number"},
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "datetime": {"type": "string", "format": "date_time"},
+                            "amount": {"type": "number"},
+                            "title": {"type": ["string", null]},
+                            "status": {"enum": ["created", "processed"]}
+                        },
+                        "required": ["datetime", "amount"],
+                        "additionalProperties": false
+                    },
+                    "minItems": 0
+                }
+            }
+        },
+        "post": {
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "transaction_id": {"type": "string"}
+                },
+                "required": ["transaction_id"],
+                "additionalProperties": false
+            }
+        },
+        "delete": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор транзакции (UUID)",
+                        "type": "string"
+                    }
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "event": {
+        "_comment": "События",
+        "get": {
+            "_comment": "Получение одного события или списка событи из календара пользователя",
+            "in": {
+                "_comment": "Получение списка событий",
+                "type": "object",
+                "oneOf": [
+                    {
+                        "properties": {
+                            "start": {
+                                "_comment": "Дата / время с которой брать выборку",
+                                "type": ["string", "null"],
+                                "format": "date-time"
+                            },
+                            "end": {
+                                "_comment": "Верхняя граница",
+                                "type": ["string", "null"],
+                                "format": "date-time"
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 1
+                            }
+                        },
+                        "required": ["id"],
+                        "additionalProperties": false
+                    }
+                ]
+            },
+            "out": {
+                "_comment": "Список событий",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"_comment": "Идентификатор события", "type": "string"},
+                        "start": {"_comment": "Дата/время начала события", "type": "string", "format": "date-time"},
+                        "title": {"_comment": "Заголовок события", "type": "string"},
+                        "periodicity": {
+                            "_comment": "Периодичность события, null — событие разовое",
+                            "type": ["object", "null"],
+                            "properties": {
+                                "frequency": {"type": "integer", "minimum": 1},
+                                "period": {"type": "number"},
+                                "period_unit": {"enum": ["h", "d", "wk", "mo"]}
+                            },
+                            "required": ["frequency", "period", "period_unit"],
+                            "additionalProperties": false
+                        },
+                        "event": {
+                            "oneOf": [
+                                {"$ref": "#/definitions/drug"},
+                                {"$ref": "#/definitions/other"},
+                                {"$ref": "#/definitions/appointment"}
+                            ]
+                        },
+                        "timeline": {
+                            "_comment": "Массив таймстемпов периодического события",
+                            "type": ["array", "null"],
+                            "items": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "minItems": 0
+                        }
+                    },
+                    "required": ["id", "start", "title", "event"],
+                    "additionalProperties": false
+                },
+                "minItems": 0,
+                "definitions": {
+                    "drug": {
+                        "_comment": "Событие - прием лекарства",
+                        "type": "object",
+                        "properties": {
+                            "type": {"enum": ["drug"]},
+                            "drugname": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {"type": ["string", "null"]},
+                                    "text": {"type": "string"}
+                                },
+                                "required": ["text"],
+                                "additionalProperties": false
+                            },
+                            "dosage": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {"type": "string"},
+                                    "value": {"type": "number"}
+                                },
+                                "required": ["code", "value"],
+                                "additionalProperties": false
+                            },
+                            "duration": {
+                                "_comment": "если не указано (или null)-до отмены, wk-неделя, mo-месяц, a-год",
+                                "type": ["object", "null"],
+                                "properties": {
+                                    "value": {"type": "number"},
+                                    "unit": {"enum": ["wk", "mo", "a"]}
+                                },
+                                "required": ["value", "unit"],
+                                "additionalProperties": false
+                            },
+                            "description": {"type": ["string", "null"]}
+                        },
+                        "required": ["type", "drugname", "dosage"],
+                        "additionalProperties": false
+                    },
+                    "other": {
+                        "_comment": "Другое",
+                        "type": "object",
+                        "properties": {
+                            "type": {"enum": ["other"]}
+                        },
+                        "required": ["type"],
+                        "additionalProperties": false
+                    },
+                    "appointment": {
+                        "_comment": "Встреча",
+                        "properties": {
+                            "type": {"enum": ["appointment"]},
+                            "practitioner": {
+                                "_comment": "Идентификатор врача (UUID)",
+                                "type": "string"
+                            },
+                            "patient": {
+                                "_comment": "Идентификатор пациента (UUID)",
+                                "type": "string"
+                            },
+                            "location": {
+                                "_comment": "Место встречи",
+                                "type": ["string", "null"]
+                            }
+                        },
+                        "required": ["type", "practitioner"],
+                        "additionalProperties": false
+                    }
+                }
+            }
+        },
+        "post": {
+            "_comment": "Создание события в календаре",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "start": {"type": "string", "format": "date-time"},
+                    "title": {"type": "string"},
+                    "periodicity": {
+                        "_comment": "Периодичность события, null — событие разовое",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "frequency": {"type": "integer", "minimum": 1},
+                            "period": {"type": "number"},
+                            "period_unit": {"enum": ["h", "d", "wk", "mo"]}
+                        },
+                        "required": ["frequency", "period", "period_unit"],
+                        "additionalProperties": false
+                    },
+                    "email_me": {"type": ["string", "null"], "format": "email"},
+                    "sms_me": {"type": ["string", "null"], "pattern": "^\\+?[\\d\\s\\(\\)\\-]{10,}$"},
+                    "event": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/definitions/appointment"}
+                        ]
+                    }
+                },
+                "required": ["start", "title", "event"],
+                "additionalProperties": false,
+                "definitions": {
+                    "appointment": {
+                        "_comment": "Встреча",
+                        "properties": {
+                            "type": {"enum": ["appointment"]},
+                            "practitioner": {
+                                "_comment": "Идентификатор врача (UUID)",
+                                "type": "string"
+                            },
+                            "patient": {
+                                "_comment": "Идентификатор пациента (UUID)",
+                                "type": "string"
+                            },
+                            "location": {
+                                "_comment": "Место встречи",
+                                "type": ["string", "null"]
+                            }
+                        },
+                        "required": ["type", "practitioner", "patient"],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор созданного события",
+                        "type": "string"
+                    },
+                    "timeline": {
+                        "_comment": "Если событие не периодическое, возвращается пустой массив, или на месяц",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "minItems": 0
+                    }
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            }
+        },
+        "put": {
+            "_comment": "Изменение события в календаре",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор события",
+                        "type": "string"
+                    },
+                    "start": {
+                        "type": "string", "format": "date-time"
+                    },
+                    "title": {
+                        "_comment": "Заголовок события",
+                        "type": "string"
+                    },
+                    "periodicity": {
+                        "_comment": "Периодичность события, null — событие разовое",
+                        "type": ["object", "null"],
+                        "properties": {
+                            "frequency": {"type": "integer", "minimum": 1},
+                            "period": {"type": "number"},
+                            "period_unit": {"enum": ["h", "d", "wk", "mo"]}
+                        },
+                        "required": ["frequency", "period", "period_unit"],
+                        "additionalProperties": false
+                    },
+                    "email_me": {"type": ["string", "null"], "format": "email"},
+                    "sms_me": {
+                        "_comment": "Номер телефона",
+                        "type": ["string", "null"]
+                    },
+                    "event": {
+                        "type": "object",
+                        "oneOf": [
+                            {"$ref": "#/definitions/appointment"}
+                        ]
+                    }
+                },
+                "required": ["id", "patient", "start", "title", "event"],
+                "additionalProperties": false,
+                "definitions": {
+                    "appointment": {
+                        "_comment": "Встреча",
+                        "properties": {
+                            "type": {"enum": ["appointment"]},
+                            "practitioner": {
+                                "_comment": "Идентификатор врача (UUID)",
+                                "type": "string"
+                            },
+                            "patient": {
+                                "_comment": "Идентификатор пациента (UUID)",
+                                "type": "string"
+                            },
+                            "location": {
+                                "_comment": "Место встречи",
+                                "type": ["string", "null"]
+                            }
+                        },
+                        "required": ["type", "practitioner", "patient"],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор измененного события",
+                        "type": "string"
+                    },
+                    "timeline": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "minItems": 0
+                    }
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            }
+        },
+        "delete": {
+            "_comment": "Удаление события из календаря",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "article": {
+        "_comment": "Работа со статьями",
+        "get": {
+            "in": {
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "string"},
+                        "title": {"type": "string"},
+                        "published_at": {
+                            "type": ["string", "null"],
+                            "format": "date-time"
+                        },
+                        "url": {"type": ["string", "null"]},
+                        "attachment": {
+                            "type": ["object", "null"],
+                            "properties": {
+                                "url": {"type": "string"}
+                            },
+                            "required": ["url"],
+                            "additionalProperties": false
+                        }
+                    },
+                    "required": ["id", "title"],
+                    "additionalProperties": false
+                },
+                "minItems": 0
+            }
+        },
+        "post": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "_comment": "Название статьи.",
+                        "type": "string"
+                    },
+                    "published_at": {
+                        "type": ["string", "null"],
+                        "format": "date-time"
+                    },
+                    "url": {
+                        "type": ["string", "null"]
+                    },
+                    "attachment": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "mime": {"type": "string"},
+                                    "filename": {"type": "string"},
+                                    "b64data": {"type": "string"}
+                                },
+                                "required": ["mime", "filename", "b64data"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "url": {"type": "string"}
+                                },
+                                "required": ["url"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": ["title"],
+                "anyOf": [
+                    {"required": ["url"]},
+                    {"required": ["attachment"]}
+                ],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор созданной статьи",
+                        "type": "string"
+                    }
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            }
+        },
+        "put": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор статьи",
+                        "type": "string"
+                    },
+                    "title": {
+                        "_comment": "Название статьи.",
+                        "type": "string"
+                    },
+                    "published_at": {
+                        "type": ["string", "null"],
+                        "format": "date-time"
+                    },
+                    "url": {
+                        "type": ["string", "null"]
+                    },
+                    "attachment": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "mime": {"type": "string"},
+                                    "filename": {"type": "string"},
+                                    "b64data": {"type": "string"}
+                                },
+                                "required": ["mime", "filename", "b64data"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "url": {"type": "string"}
+                                },
+                                "required": ["url"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": ["id", "title"],
+                "anyOf": [
+                    {"required": ["url"]},
+                    {"required": ["attachment"]}
+                ],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        },
+        "delete": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "emr": {
+        "_comment": "Работа с медицинскими записями пациента",
+        "get": {
+            "_comment": "Чтение медицинских записей",
+            "in": {
+                "type": "object",
+                "oneOf": [
+                    {
+                        "_comment": "Чтение одной записи",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "owner": {"type": "string"}
+                        },
+                        "required": ["id", "owner"],
+                        "additionalProperties": false
+                    },
+                    {
+                        "_comment": "Чтение записей с указанными идентификаторами",
+                        "properties": {
+                            "id": {
+                                "type": "array",
+                                "items": {
+                                    "_comment": "Идентификатор записи",
+                                    "type": "string"
+                                },
+                                "minItems": 1
+                            },
+                            "owner": {
+                                "_comment": "Идентификатор пациента",
+                                "type": "string"
+                            }
+                        },
+                        "required": ["id", "owner"],
+                        "additionalProperties": false
+                    },
+                    {
+                        "_comment": "Чтение среза записей (работает по умолчанию)",
+                        "properties": {
+                            "owner": {
+                                "_comment": "Идентификатор пациента",
+                                "type": "string"
+                            },
+                            "start": {
+                                "type": ["string", "null"],
+                                "format": "date-time"
+                            },
+                            "end": {
+                                "type": ["string", "null"],
+                                "format": "date-time"
+                            }
+                        },
+                        "required": ["owner"],
+                        "additionalProperties": false
+                    }
+                ]
+            },
+            "out": {
+                "_comment": "Выходной список записей",
+                "type": "object",
+                "properties": {
+                    "refbooks": {
+                        "_comment": "Справочники",
+                        "type": "object",
+                        "properties": {
+                            "cases": {
+                                "_comment": "Случаи",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {"type": "string"},
+                                        "display": {"type": "string"}
+                                    },
+                                    "required": ["code", "display"],
+                                    "additionalProperties": false
+                                },
+                                "minItems": 0
+                            },
+                            "series": {
+                                "_comment": "Серии",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {"type": "string"},
+                                        "display": {"type": "string"}
+                                    },
+                                    "required": ["code", "display"],
+                                    "additionalProperties": false
+                                },
+                                "minItems": 0
+                            },
+                            "categories": {
+                                "_comment": "Разделы",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {"type": "string"},
+                                        "display": {"type": "string"}
+                                    },
+                                    "required": ["code", "display"],
+                                    "additionalProperties": false
+                                },
+                                "minItems": 0
+                            }
+                        },
+                        "required": ["cases", "series", "categories"],
+                        "additionalProperties": false
+                    },
+                    "items": {
+                        "_comment": "Записи",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"_comment": "Идентификатор записи", "type": "string"},
+                                "owner": {"_comment": "Идентификатор пациента", "type": "string"},
+                                "title": {"type": "string"},
+                                "status": {"enum": ["preliminary", "final"]},
+                                "date": {"type": "string", "format": "date-time"},
+                                "emr_data": {
+                                    "_comment": "Тип и данные записи",
+                                    "oneOf": [
+                                        {
+                                            "_comment": "Анализы",
+                                            "type": "object",
+                                            "properties": {
+                                                "emr_type": {"enum": ["analysis"]},
+                                                "emr_items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "code": {"type": "string"},
+                                                            "title": {"type": ["string", "null"]},
+                                                            "unit": {"type": ["string", "null"]},
+                                                            "value": {"type": ["number", "string"]},
+                                                            "min_value": {"type": "number"},
+                                                            "max_value": {"type": "number"}
+                                                        },
+                                                        "required": ["code", "value"],
+                                                        "additionalProperties": false
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "_comment": "Диагноз",
+                                            "type": "object",
+                                            "properties": {
+                                                "emr_type": {"enum": ["diagnosis"]},
+                                                "emr_items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "anyOf": [
+                                                            {
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["organization"]},
+                                                                    "organization": {"type": "string"}
+                                                                },
+                                                                "required": ["sign_type", "organization"],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["practitioner"]},
+                                                                    "practitioner": {"type": "string"}
+                                                                },
+                                                                "required": ["sign_type", "practitioner"],
+                                                                "additionalProperties": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    "minItems": 0,
+                                                    "uniqueItems": true
+                                                }
+                                            },
+                                            "required": ["emr_type"],
+                                            "additionalProperties": false
+                                        },
+                                        {
+                                            "_comment": "Показатели",
+                                            "type": "object",
+                                            "properties": {
+                                                "emr_type": {"enum": ["vital_signs"]},
+                                                "emr_items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "anyOf": [
+                                                            {
+                                                                "_comment": "Температура тела",
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["temperature"]},
+                                                                    "temperature": {"type": "number"}
+                                                                },
+                                                                "required": ["sign_type", "temperature"],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "_comment": "Давление",
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["blood_pressure"]},
+                                                                    "systolic": {"type": "number"},
+                                                                    "diastolic": {"type": "number"}
+                                                                },
+                                                                "required": ["sign_type", "systolic", "diastolic"],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "_comment": "Пульс",
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["heart_rate"]},
+                                                                    "heart_rate": {"type": "number"}
+                                                                },
+                                                                "required": ["sign_type", "heart_rate"],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "_comment": "Вес тела",
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["body_weight"]},
+                                                                    "body_weight": {"type": "number"}
+                                                                },
+                                                                "required": ["sign_type", "body_weight"],
+                                                                "additionalProperties": false
+                                                            },
+                                                            {
+                                                                "_comment": "Глюкоза в крови",
+                                                                "properties": {
+                                                                    "sign_type": {"enum": ["blood_glucose"]},
+                                                                    "blood_glucose": {"type": "number"}
+                                                                },
+                                                                "required": ["sign_type", "blood_glucose"],
+                                                                "additionalProperties": false
+                                                            }
+                                                        ]
+                                                    },
+                                                    "minItems": 0,
+                                                    "uniqueItems": true
+                                                }
+                                            },
+                                            "required": ["emr_type"],
+                                            "additionalProperties": false
+                                        }
+                                    ]
+                                },
+                                "description": {"type": ["string", "null"]},
+                                "attachments": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "url": {"type": "string"}
+                                        },
+                                        "required": ["url"],
+                                        "additionalProperties": false
+                                    },
+                                    "minItems": 0
+                                },
+                                "dicom": {
+                                    "_comment": "Ссылки на DICOM",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "url": {"type": "string"}
+                                        },
+                                        "required": ["url"],
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "category": {
+                                    "_comment": "Раздел",
+                                    "type": ["string", "null"]
+                                },
+                                "emr_cases": {
+                                    "_comment": "Случаи",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "minItems": 0
+                                },
+                                "emr_series": {
+                                    "_comment": "Серии",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "minItems": 0
+                                },
+                                "comments": {
+                                    "_comment": "Комментарии к записи",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {"_comment": "Идентификатор комментария", "type": "string"},
+                                            "date": {"type": "string", "format": "date-time"},
+                                            "message": {"type": "string"},
+                                            "person": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {"type": "string"},
+                                                    "title": {"type": ["string", "null"]},
+                                                    "role": {"enum": ["patient", "practitioner"]}
+                                                },
+                                                "required": ["id", "role"],
+                                                "additionalProperties": false
+                                            }
+                                        },
+                                        "required": ["id", "date", "message"],
+                                        "additionalProperties": false
+                                    },
+                                    "minItems": 0
+                                },
+                                "access": {"enum": ["r", "rw"]}
+                            },
+                            "required": ["id", "owner", "title", "status", "date", "emr_data"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0
+                    }
+                },
+                "required": ["items"],
+                "additionalProperties": false
+            }
+        },
+        "post": {
+            "_comment": "Создание медицинской записи",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string"},
+                    "owner": {"_comment": "Идентификатор пациента", "type": "string"},
+                    "status": {"enum": ["preliminary", "final"]},
+                    "date": {"type": "string", "format": "date-time"},
+                    "emr_data": {
+                        "_comment": "Тип и данные записи",
+                        "oneOf": [
+                            {
+                                "_comment": "Анализ",
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["analysis"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "_comment": "Код анализа (LOINC)",
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "_comment": "Значение",
+                                                    "type": ["number", "string"]
+                                                },
+                                                "title": {
+                                                    "_comment": "Название",
+                                                    "type": ["string", "null"]
+                                                },
+                                                "unit": {
+                                                    "_comment": "Единица измерения",
+                                                    "type": ["string", "null"]
+                                                },
+                                                "min_value": {
+                                                    "_comment": "Минимальное значение",
+                                                    "type": "number"
+                                                },
+                                                "max_value": {
+                                                    "_comment": "Максимальное значение",
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": ["code", "value", "min_value", "max_value"],
+                                            "additionalProperties": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["diagnosis"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "anyOf": [
+                                                {
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["organization"]},
+                                                        "organization": {"type": "string"}
+                                                    },
+                                                    "required": ["sign_type", "organization"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["practitioner"]},
+                                                        "practitioner": {"type": "string"}
+                                                    },
+                                                    "required": ["sign_type", "practitioner"],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        },
+                                        "minItems": 0,
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": ["emr_type"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["vital_signs"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "anyOf": [
+                                                {
+                                                    "_comment": "Температура тела",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["temperature"]},
+                                                        "temperature": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "temperature"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Давление",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["blood_pressure"]},
+                                                        "systolic": {"type": "number"},
+                                                        "diastolic": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "systolic", "diastolic"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Пульс",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["heart_rate"]},
+                                                        "heart_rate": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "heart_rate"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Вес тела",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["body_weight"]},
+                                                        "body_weight": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "body_weight"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Глюкоза в крови",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["blood_glucose"]},
+                                                        "blood_glucose": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "blood_glucose"],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        },
+                                        "minItems": 0,
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": ["emr_type"],
+                                "additionalProperties": false
+                            }
+                        ]
+                    },
+                    "description": {"type": ["string", "null"]},
+                    "attachments": {
+                        "_comment": "Документы и изображения",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "mime": {"type": "string"},
+                                "filename": {"type": "string"},
+                                "b64data": {"type": "string", "contentEncoding": "base64"}
+                            },
+                            "required": ["mime", "filename", "b64data"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0,
+                        "uniqueItems": true
+                    },
+                    "category": {
+                        "_comment": "Раздел (берется из ValueSet (id=medarchive-category)",
+                        "type": ["string", "null"]
+                    },
+                    "emr_cases": {
+                        "_comment": "Медицинские случаи",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 0
+                    },
+                    "emr_series": {
+                        "_comment": "Серии",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 0
+                    },
+                    "access": {
+                        "_comment": "Параметры доступа к записи (игнорируется).",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "practitioner": {"type": ["string", "null"]},
+                                "group": {"enum": ["all"]},
+                                "flag": {"enum": ["r", "rw"]}
+                            },
+                            "oneOf": [
+                                {"required": ["practitioner"]},
+                                {"required": ["group"]}
+                            ],
+                            "additionalProperties": false,
+                            "required": ["flag"]
+                        },
+                        "uniqueItems": true
+                    }
+                },
+                "required": ["title", "owner", "status", "date", "emr_data"],
+                "additionalProperties": false
+            },
+            "out": {
+                "_comment": "При создании возвращаем идентификатор созданной записи",
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"}
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            }
+        },
+        "put": {
+            "_comment": "Редактирование медицинской записи",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string"},
+                    "id": {"_comment": "Идентификатор записи", "type": "string"},
+                    "owner": {"_comment": "Идентификатор пациента", "type": "string"},
+                    "status": {"enum": ["preliminary", "final"]},
+                    "date": {"type": "string", "format": "date-time"},
+                    "emr_data": {
+                        "_comment": "Тип и данные записи",
+                        "oneOf": [
+                            {
+                                "_comment": "Анализ",
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["analysis"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "_comment": "Код анализа (LOINC)",
+                                                    "type": "string"
+                                                },
+                                                "value": {
+                                                    "_comment": "Значение",
+                                                    "type": ["number", "string"]
+                                                },
+                                                "title": {
+                                                    "_comment": "Название",
+                                                    "type": ["string", "null"]
+                                                },
+                                                "unit": {
+                                                    "_comment": "Единица измерения",
+                                                    "type": ["string", "null"]
+                                                },
+                                                "min_value": {
+                                                    "_comment": "Минимальное значение",
+                                                    "type": "number"
+                                                },
+                                                "max_value": {
+                                                    "_comment": "Максимальное значение",
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": ["code", "value", "min_value", "max_value"],
+                                            "additionalProperties": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["diagnosis"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "anyOf": [
+                                                {
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["organization"]},
+                                                        "organization": {"type": "string"}
+                                                    },
+                                                    "required": ["sign_type", "organization"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["practitioner"]},
+                                                        "practitioner": {"type": "string"}
+                                                    },
+                                                    "required": ["sign_type", "practitioner"],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        },
+                                        "minItems": 0,
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": ["emr_type"],
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "emr_type": {"enum": ["vital_signs"]},
+                                    "emr_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "anyOf": [
+                                                {
+                                                    "_comment": "Температура тела",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["temperature"]},
+                                                        "temperature": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "temperature"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Давление",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["blood_pressure"]},
+                                                        "systolic": {"type": "number"},
+                                                        "diastolic": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "systolic", "diastolic"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Пульс",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["heart_rate"]},
+                                                        "heart_rate": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "heart_rate"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Вес тела",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["body_weight"]},
+                                                        "body_weight": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "body_weight"],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "_comment": "Глюкоза в крови",
+                                                    "properties": {
+                                                        "sign_type": {"enum": ["blood_glucose"]},
+                                                        "blood_glucose": {"type": "number"}
+                                                    },
+                                                    "required": ["sign_type", "blood_glucose"],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        },
+                                        "minItems": 0,
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": ["emr_type"],
+                                "additionalProperties": false
+                            }
+                        ]
+                    },
+                    "description": {"type": ["string", "null"]},
+                    "attachments": {
+                        "_comment": "Документы и изображения",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "mime": {"type": "string"},
+                                "filename": {"type": "string"},
+                                "b64data": {"type": "string", "contentEncoding": "base64"}
+                            },
+                            "required": ["mime", "filename", "b64data"],
+                            "additionalProperties": false
+                        },
+                        "minItems": 0,
+                        "uniqueItems": true
+                    },
+                    "category": {
+                        "_comment": "Раздел (берется из ValueSet (id=medarchive-category)",
+                        "type": ["string", "null"]
+                    },
+                    "emr_cases": {
+                        "_comment": "Медицинские случаи",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 0
+                    },
+                    "emr_series": {
+                        "_comment": "Серии",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 0
+                    },
+                    "access": {
+                        "_comment": "Параметры доступа к записи (игнорируется).",
+                        "type": ["array", "null"],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "practitioner": {"type": ["string", "null"]},
+                                "group": {"enum": ["all"]},
+                                "flag": {"enum": ["r", "rw"]}
+                            },
+                            "oneOf": [
+                                {"required": ["practitioner"]},
+                                {"required": ["group"]}
+                            ],
+                            "additionalProperties": false,
+                            "required": ["flag"]
+                        },
+                        "uniqueItems": true
+                    }
+                },
+                "required": ["id", "title", "owner", "status", "date", "emr_data"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "invitation": {
+        "_comment": "Отправка приглашений",
+        "post": {
+            "in": {
+                "type": "object",
+                "properties": {
+                    "recipient": {"type": "string"}
+                },
+                "required": ["recipient"],
+                "additionalProperties": false
+            },
+            "out": {
+                "additionalProperties": false
+            }
+        }
+    },
+    "service_confirm": {
+        "_comment": "Подтверждение оказания услуги"
+    },
+    "service_reject": {
+        "_comment": "Отказ в предоставлении услуги"
+    },
+    "service_complete": {
+        "_comment": "Предварительное завершение услуги"
+    },
+    "service_cancel": {
+        "_comment": "Отмена услуги"
+    }
+}

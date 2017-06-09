@@ -1,0 +1,113 @@
+{
+    "comment": {
+        "_comment": "Комментарии к ЭМК",
+        "get": {
+            "in": {
+                "_comment": "Идентификатор записи ЭМК",
+                "type": "object",
+                "properties": {
+                    "emr": {"type": "string"}
+                },
+                "required": ["emr"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "string"},
+                        "date": {"type": "string", "format": "date-time"},
+                        "message": {"type": "string"},
+                        "person": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "string"},
+                                "title": {"type": "string"},
+                                "role": {"enum": ["patient", "practitioner"]}
+                            },
+                            "required": ["id"],
+                            "additionalProperties": false
+                        }
+                    },
+                    "required": ["id", "date", "message"],
+                    "additionalProperties": false
+                },
+                "minItems": 0
+            }
+        },
+        "post": {
+            "_comment": "Новый комментарий",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "emr": {
+                        "_comment": "Идентификатор ЭМК (UUID)",
+                        "type": "string"
+                    },
+                    "message": {"type": "string"}
+                },
+                "required": ["emr", "message"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор комментария (UUID)",
+                        "type": "string"
+                    },
+                    "date": {"type": "string", "format": "date-time"},
+                    "person": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "_comment": "Идентификатор персоны (UUID)",
+                                "type": "string"
+                            },
+                            "title": {"type": "string"},
+                            "role": {"enum": ["patient", "practitioner"]}
+                        },
+                        "required": ["id", "title", "role"],
+                        "additionalProperties": false
+                    }
+                },
+                "required": ["id", "date"],
+                "additionalProperties": false
+            }
+        },
+        "put": {
+            "_comment": "Редактирование комментария",
+            "in": {
+                "type": "object",
+                "properties": {
+                    "emr": {
+                        "_comment": "Идентификатор записи (UUID)",
+                        "type": "string"
+                    },
+                    "id": {
+                        "_comment": "Идентификатор комментария (UUID)",
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "required": ["id", "message"],
+                "additionalProperties": false
+            },
+            "out": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "_comment": "Идентификатор комментария (UUID)",
+                        "type": "string"
+                    },
+                    "date": {"type": "string", "format": "date-time"}
+                },
+                "required": ["id", "date"],
+                "additionalProperties": false
+            }
+        }
+    }
+}

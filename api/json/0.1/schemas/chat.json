@@ -1,0 +1,128 @@
+{
+  "messages": {
+    "get": {
+      "in": {
+        "_comment": "Запрос новых сообщений",
+        "type": "object",
+        "properties": {
+          "sender_id": {"type": "string"}
+        },
+        "required": ["sender_id"],
+        "additionalProperties": false
+      },
+      "out": {
+        "_comment": "Список сообщений",
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "message": "object",
+              "properties": {
+                "id": {"type": "string"},
+                "sent_at": {"type": "string", "format": "date-time"},
+                "message": {"type": "string"},
+                "files": {
+                  "type": ["array", "null"],
+                  "items": {
+                    "file": "object",
+                    "properties": {
+                      "filename": {"type": "string"},
+                      "mime_type": {"type": "string"},
+                      "url": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "in": {
+        "_comment": "Отправка собщения",
+        "type": "object",
+        "properties": {
+          "recipient_id": {"type": "string"},
+          "message": {"type": ["string", "null"]},
+          "sender_role": {"enum": ["patient", "practitioner"]},
+          "files": {
+            "type": ["array", "null"],
+            "items": {
+              "file": "object",
+              "properties": {
+                "mime": {"type": "string"},
+                "filename": {"type": "string"},
+                "b64data": {"type": "string", "contentEncoding": "base64"}
+              }
+            }
+          }
+        },
+        "required": ["recipient_id", "sender_role"],
+        "additionalProperties": false
+      },
+      "out": {
+        "_comment": "Результат отправки",
+        "type": "object",
+        "properties": {
+          "id": {"type": ["integer", "null"],
+          "files": {
+            "type": ["array", "null"],
+            "items": {
+              "file": "object",
+                "properties": {
+                  "filename": {"type": "string"},
+                  "mime_type": {"type": "string"},
+                  "url": {"type": "string"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "history": {
+    "get": {
+      "in": {
+        "_comment": "Запрос истории сообщений",
+        "type": "object",
+        "properties": {
+          "sender_id": {"type": "string"},
+          "count": {"type": "integer"}
+        },
+        "required": ["sender_id"],
+        "additionalProperties": false
+      },
+      "out": {
+        "_comment": "Список сообщений",
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "message": "object",
+              "properties": {
+                "id": {"type": "string"},
+                "sent_at": {"type": "string", "format": "date-time"},
+                "message": {"type": "string"},
+                "files": {
+                  "type": ["array", "null"],
+                  "items": {
+                    "file": "object",
+                    "properties": {
+                      "filename": {"type": "string"},
+                      "mime_type": {"type": "string"},
+                      "url": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
