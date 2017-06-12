@@ -10,11 +10,6 @@ def pytest_addoption(parser):
         default="localhost",
         help="host of the server under test (e.g. localhost or searchbox-1.dev.search.km)."
     )
-    parser.addoption("--port",
-        action="store",
-        default=80,
-        help="port of the server under test."
-    )
     parser.addoption("--api_version",
         action="store",
         default="0.1",
@@ -23,20 +18,23 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session')
 def host_url(request):
-    '''Construct base url of goropka webserver ({scheme}://{host}:{port}) under test and check connection.
+    '''Construct base url of goropka webserver ({scheme}://{host}/apis/{version}/) under test and check connection.
     '''
-    base_url = "{host}/apis/{}:{port}".format(
-        host=request.config.getoption("host"),
-        version=request.config.getoption("api_version"),
-        port=request.config.getoption("port")
+    base_url = "{host}/apis/{version}/".format(
+        host=pytest.config.getoption("--host"),
+        version=pytest.config.getoption("--api_version")
     )
-    r = requests.head(base_url)
-    r.raise_for_status()
     return base_url
 
 @pytest.fixture(scope='session')
 def med_api(host_url):
-    return BaseClient(host_url, root='/')
+    return BaseClient(host_url, root='./')
+
+@pytest.fixture(scope='session')
+def logged_in_user(med_api):
+    r_login = med_api.post('auth/login', json=TESTUSER)
+    yield r_login
+    med_api.post('auth/logout', json={})
 
 class BaseClient(object):
     '''Convenience interface for any REST API
