@@ -1,7 +1,7 @@
 import pytest
 import requests
 from urllib.parse import urljoin
-from extra.configs import TESTUSER
+from extra.configs import TEST_PACIENT, TEST_PRACTITIONER
 
 
 def pytest_addoption(parser):
@@ -30,9 +30,15 @@ def host_url(request):
 def med_api(host_url):
     return BaseClient(host_url, root='./')
 
-@pytest.yield_fixture(scope='session')
-def logged_in_user(med_api):
-    r_login = med_api.post('auth/login', json=TESTUSER)
+@pytest.yield_fixture(scope='module')
+def logged_in_pacient(med_api):
+    r_login = med_api.post('auth/login', json=TEST_PACIENT)
+    yield r_login
+    med_api.post('auth/logout', json={})
+
+@pytest.yield_fixture(scope='module')
+def logged_in_practitioner(med_api):
+    r_login = med_api.post('auth/login', json=TEST_PRACTITIONER)
     yield r_login
     med_api.post('auth/logout', json={})
 
