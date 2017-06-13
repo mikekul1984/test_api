@@ -30,7 +30,7 @@ def host_url(request):
 def med_api(host_url):
     return BaseClient(host_url, root='./')
 
-@pytest.fixture(scope='session')
+@pytest.yield_fixture(scope='session')
 def logged_in_user(med_api):
     r_login = med_api.post('auth/login', json=TESTUSER)
     yield r_login
