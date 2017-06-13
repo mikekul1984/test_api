@@ -20,7 +20,7 @@ def test_get_patient_profile(med_api, logged_in_user, json_schema):
 def test_get_patient_emr(med_api, logged_in_user, json_schema):
     '''Получение информации об авторизованном пользователе через API (/patient/emr).
     '''
-    with pytest.allure.step("Sending user profile request: expecting ok response"):
+    with pytest.allure.step("Sending user emr request: expecting ok response"):
         r = med_api.get('patient/emr')
         r.raise_for_status()
         utils.validate_json(r.json()['data'], json_schema['emr']['get']['out']['properties'])
