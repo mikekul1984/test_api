@@ -5,7 +5,9 @@ from extra import utils
 
 @pytest.fixture(scope='module')
 def json_schema():
-    with open('api/json/0.1/schemas/patient.json') as f_schema:
+    with open('api/json/{}/schemas/patient.json'.
+                      format(pytest.config.getoption("--api_version")))\
+            as f_schema:
         schema = json.load(f_schema)
         return schema
 
