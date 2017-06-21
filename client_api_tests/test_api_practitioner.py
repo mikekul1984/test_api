@@ -27,8 +27,8 @@ def test_get_practitioner_patient(med_api, logged_in_practitioner, json_schema):
     with pytest.allure.step("Sending user profile request: expecting ok response"):
         r = med_api.get('practitioner/patient')
         r.raise_for_status()
+        practitioner_patient_schema = json_schema['patient']['get']['out']['items']['properties']
+        practitioner_patient_schema.pop('id')
         if r.json():
             for _p in r.json()['data']:
-                practitioner_patient_schema = json_schema['patient']['get']['out']['items']['properties']
-                practitioner_patient_schema.pop('id')
                 utils.validate_json(_p, practitioner_patient_schema)

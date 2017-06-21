@@ -1,5 +1,6 @@
 import pytest
 import requests
+import logging
 from urllib.parse import urljoin
 from extra.configs import TEST_PACIENT, TEST_PRACTITIONER
 
@@ -30,17 +31,24 @@ def host_url(request):
 def med_api(host_url):
     return BaseClient(host_url, root='./')
 
-@pytest.yield_fixture(scope='module')
+@pytest.yield_fixture(scope='session')
 def logged_in_pacient(med_api):
     r_login = med_api.post('auth/login', json=TEST_PACIENT)
     yield r_login
     med_api.post('auth/logout', json={})
 
-@pytest.yield_fixture(scope='module')
+@pytest.yield_fixture(scope='session')
 def logged_in_practitioner(med_api):
     r_login = med_api.post('auth/login', json=TEST_PRACTITIONER)
     yield r_login
     med_api.post('auth/logout', json={})
+
+
+@pytest.fixture(autouse=True, scope='session')
+def logger():
+    logging.basicConfig(level=logging.DEBUG)
+    return logging
+
 
 class BaseClient(object):
     '''Convenience interface for any REST API
