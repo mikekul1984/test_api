@@ -66,3 +66,84 @@ def test_devices_list(med_api, logged_in_pacient, devices, logger):
         logger.info("All current devices: {!r}".format(results_list))
         for _s in devices:
             assert _s in results_list
+
+
+POST_CASES = (
+    dict(description="Adding device with empty udn",
+         ok=False,
+         post_data={"udn": "", "device_type": "tonometer"},
+         expected_code=502),
+    dict(description="Adding normal device",
+         ok=True,
+         post_data={"udn": "some_device", "device_type": "alivecor"},
+         expected_code=200),
+    dict(description="Adding device with empty device_type",
+         ok=False,
+         post_data={"udn": "some_device", "device_type": ""},
+         expected_code=401),
+    dict(description="Adding device with empty request's body",
+         ok=False,
+         post_data={},
+         expected_code=401)
+)
+
+
+@pytest.mark.parametrize('case', POST_CASES, ids=tuple(str(_c['post_data']) for _c in POST_CASES))
+def test_device_post(case, med_api, logged_in_pacient, logger, cleanup_test_devices):
+    """
+    Добавление нового устройства для пользователя.
+    """
+    with pytest.allure.step(case['description']):
+        r_post = med_api.post('patient/device', json=case['post_data'])
+        logger.info("Response: {!r}".format(r_post.content))
+
+    with pytest.allure.step("Verifying response (expecting ok = {})".format(case['ok'])):
+        assert r_post.ok == case['ok']
+        assert r_post.json()['code'] == case['expected_code']  # created
+        if case['ok']:
+            with pytest.allure.step("Make sure that device was added"):
+                new_device = case['post_data']
+                new_device['id'] = r_post.json()['data']['id']
+                r = med_api.get('patient/device')
+                results = r.json()['data']
+                results_list = [{'id': _r['id'], 'device_type': _r['device_type'], 'udn': _r['udn']} for _r in results]
+                assert new_device in results_list
+
+
+def test_device_put(devices, med_api, logged_in_pacient, logger, cleanup_test_devices):
+    """
+    Изменяем параметры устройства для пользователя.
+    """
+    with pytest.allure.step('Change device udn'):
+        r_put = med_api.put('patient/device', json={'id': devices[0]['id'],
+                                                    'udn': devices[0]['udn'] + '_new'}
+                            )
+        logger.info("Response: {!r}".format(r_put.content))
+        r_put.raise_for_status()
+        r = med_api.get('patient/device')
+        results = r.json()['data']
+        # results_list = [{'id': _r['id'], 'device_type': _r['device_type'], 'udn': _r['udn']} for _r in results]
+        devices_status = {_r['id']: _r['active'] for _r in results}
+        assert {'id': devices[0]['id'],
+                'udn': devices[0]['udn'] + '_new',
+                'device_type': devices[0]['device_type'],
+                'active': devices_status[devices[0]['id']],
+                'last_use': None} in results
+    with pytest.allure.step('Change device active status'):
+        r_put = med_api.put('patient/device', json={'id': devices[1]['id'],
+                                                    'udn': devices[1]['udn'],
+                                                    'active': not devices_status[devices[1]['id']]}
+                            )
+        logger.info("Response: {!r}".format(r_put.content))
+        r_put.raise_for_status()
+        r = med_api.get('patient/device')
+        results = r.json()['data']
+        assert {'id': devices[1]['id'],
+                'udn': devices[1]['udn'],
+                'device_type': devices[1]['device_type'],
+                'active': not devices_status[devices[1]['id']],
+                'last_use': None} in results
+    with pytest.allure.step('Change to wrong attributes'):
+        r_put = med_api.put('patient/device', json={'wrong_attr': 'wrong_value'})
+        logger.info("Response: {!r}".format(r_put.content))
+        assert not r_put.ok
